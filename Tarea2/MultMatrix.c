@@ -92,7 +92,7 @@ void freeMatrix(Matrix * m){
 }
 
 //Writes the result matrix in a file 
-void ResultMatrix(Matrix * matrix){
+void WriteMatrix(Matrix * matrix){
     FILE* file = fopen("finalMatrix.txt", "w");
 
     fprintf(file, "%i %i\n", matrix->rows, matrix->columns);
@@ -145,7 +145,7 @@ void Mult(char * file1, char * file2){
         printf("Result Matrix: \n");
         PrintMatrix(result);
         printf("Writting new txt file\n");
-        ResultMatrix(result);
+        WriteMatrix(result);
 
     }else{
         //If the matrices cannot be multiplied
