@@ -105,7 +105,6 @@ void toChar(float num, char * string, int index){
 
 }
 
-
 //function to transform into int
 void trasformToInt(char * string, int * numberint, int size){
 
@@ -254,4 +253,3 @@ int main(int argc, char **argv){
     free(valv);
     return 0;
 }
-
