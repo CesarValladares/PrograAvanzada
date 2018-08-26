@@ -6,7 +6,7 @@
 
     to use after compile it do:
 
-    ./executbale "file name 1" "file name 2"
+    ./executable "file name 1" "file name 2"
 */
 
 #include <stdio.h>
