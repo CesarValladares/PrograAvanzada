@@ -1,6 +1,9 @@
-OBJECTS = simpleTest.o stringTools.o
-DEPENDS = stringTools.h
-MAIN = simpleTest
+# César Armando Valladares
+# A01023506
+
+OBJECTS = main.o ppm.o
+DEPENDS = ppm.h
+MAIN = main
 
 CC = gcc
 CFLAGS = -std=gnu99 -Wall -pedantic -g

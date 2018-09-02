@@ -146,11 +146,16 @@ void Mult(char * file1, char * file2){
         PrintMatrix(result);
         printf("Writting new txt file\n");
         WriteMatrix(result);
+        freeMatrix(result);
 
     }else{
         //If the matrices cannot be multiplied
         printf("!!!CANNOT MULTIPLY MATRICES!!!\n");
     }
+
+    //free memory
+    freeMatrix(m1);
+    freeMatrix(m2);
 }
 
 int main(int argc, char *argv[]){

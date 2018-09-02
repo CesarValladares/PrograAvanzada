@@ -20,16 +20,5 @@
                 }
             ]
         },
-        {
-            "name": "(Windows) Launch",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "./debug_strings",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "$/mnt/c/Users/Cesar/Desktop/Escuela/septimo/PrograAvanzada/DinamycMemory",
-            "environment": [],
-            "externalConsole": true
-        }
     ]
 }
