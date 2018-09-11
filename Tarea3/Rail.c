@@ -1,37 +1,43 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-main()
-{
-    int i,j,len,rails,count,code[100][1000];
-    char str[1000];
-    printf("Enter a Secret Message\n");
-    gets(str);
-    len=strlen(str);
-    printf("Enter number of rails\n");
-    scanf("%d",&rails);
-    for(i=0;i<rails;i++){
-        for(j=0;j<len;j++){
-            code[i][j]=0;
+#include "Rails.h"
+
+char * Code(char * original, int rails)
+{   
+    printf("Encoding...\n");
+
+    int len = strlen(original);
+
+    char* result = malloc((len) * sizeof(char));
+
+    char code[rails][len];
+    
+    for( int i = 0 ; i < rails ; i++){
+
+        for( int j = 0 ; j < len ; j++){
+
+            code[i][j]='\0';
+
         }
     }
-    count=0;
-    j=0;
+
+    int count = 0;
+    int j = 0;
+
     while(j<len)
     {
-        if(count%2==0)
+        if(count % 2 == 0)
         {
-            for(i=0;i<rails;i++){
-                //strcpy(code[i][j],str[j]);
-                code[i][j]=(int)str[j]; 
+            for(int i = 0 ; i < rails ; i++){
+                
+                code[i][j]=original[j]; 
                 j++;
             }   
  
         }
         else
         {   
-            for(i=rails-2;i>0;i--){
-                code[i][j]=(int)str[j];
+            for(int i = rails - 2 ; i > 0 ; i--){
+                
+                code[i][j]=original[j];
                 j++;
             }  
         } 
@@ -39,11 +45,37 @@ main()
         count++;
     }
 
-    for(i=0;i<rails;i++){
-        for(j=0;j<len;j++){
-            if(code[i][j]!=0)
-                printf("%c",code[i][j]);
+
+    int l = 0;
+    
+    for(int i = 0 ; i < rails; i++){
+
+        for(int j = 0 ; j < len ; j++){
+
+            if(code[i][j]!='\0'){
+
+                result[l] = code[i][j];
+                l++;
+            }
         }
  
-    }printf("\n");
+    }   
+
+
+    return result;
+}
+
+char main(int argc, char * argv[]){
+    if (argc < 3)
+    {
+        printf("No enough arguments recieved. Returning 0\n");
+        return '\0';
+    }
+    else
+    {
+        char * original = argv[1];
+        int rails = atoi(argv[2]);
+        
+        return * Code(original, rails);
+    }
 }
