@@ -8,59 +8,53 @@ int main (){
 
     char a[500];
 
-    FILE * file;
-
     // Getting data from user
     
     printf("Enter the name of the file:\n");
-    char filename[50];
-    scanf("%s", filename);
+    char filename[50] = "text.txt";
+    //scanf("%s", filename);
 
     printf("Enter the number of rails:\n");
-    char rails[10];
-    scanf("%s", rails);
+    int rails = 4;
+    //scanf("%s", rails);
+
+    FILE * mainFile = fopen(filename, "r");
+    fgets(a, sizeof(a), mainFile);
 
     // Forking
 
     pid_t pid;
     pid = fork();
 
-    if(pid > 0){
+    // Pipe
 
-        int status;
+    int pipe_code[2];
+    if(pipe(pipe_code)== -1){
 
-        printf("Father\n");
-
-        wait(&status);
-
-        printf("Father2\n");
-        printf("My child returned a %d\n", WEXITSTATUS(status));
+        // Error creating the pipe
+        printf("Error!\nQuitting!\n");
+        exit(EXIT_FAILURE);
     }
-    else if(pid == 0){
 
-        printf("child\n");
+    if(pid == 0){
 
-        file = fopen(filename, "r");
+        Child(filename, pipe_code, a, rails);
+        exit(0);
+        
+    }
+    else if(pid > 0){
 
-        while (fgets(a, sizeof(a), file)) {
-
-            printf("Reading...\n");
-
-            a[strlen(a) - 1] = '\0';
-            
-            char * program = "Rail";
-            char * arguments[] = {"Rail", a, rails,(char*)NULL};
-            
-            printf("Data\n");
-            execv(program, arguments);
-            
-        }
-        fclose(file);
+        wait(NULL);
+        Parent(pipe_code);
+        
     }
     else
     {
         printf("Fork failed");
     }
+
+    fclose(mainFile);
+
 
     return 0;
 }
