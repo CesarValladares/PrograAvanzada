@@ -1,60 +1,60 @@
-#include "Rails.h"
-#include <unistd.h>
-#include <sys/wait.h>
+/* 
+    César Armando Valladares
+    A01023506
+*/
+
 #include <stdio.h>
+#include <getopt.h>
+#include <string.h>
+#include <unistd.h>
 #include <stdlib.h>
 
-int main (){
+#include "ppm.h"
 
-    char a[500];
+int main(int argc, char * const argv[])
+{
+    int option = 0;
+    char file[50];
+    char targetFile[50];
+    int negative = 0;
+    int scale;
 
-    // Getting data from user
-    
-    printf("Enter the name of the file:\n");
-    char filename[50] = "text.txt";
-    //scanf("%s", filename);
-
-    printf("Enter the number of rails:\n");
-    int rails = 4;
-    //scanf("%s", rails);
-
-    FILE * mainFile = fopen(filename, "r");
-    fgets(a, sizeof(a), mainFile);
-
-    // Forking
-
-    pid_t pid;
-    pid = fork();
-
-    // Pipe
-
-    int pipe_code[2];
-    if(pipe(pipe_code)== -1){
-
-        // Error creating the pipe
-        printf("Error!\nQuitting!\n");
-        exit(EXIT_FAILURE);
+    while((option = getopt(argc, argv, "i:o:s:n")) != -1 ){
+        switch(option){
+            case 'i':
+               strcpy(file, optarg);
+               break;
+            case 'o':
+               strcpy(targetFile, optarg);
+               break;
+            case 'n':
+                negative = 1;
+                break;
+            case 's':
+                scale = atoi(optarg);
+                break;
+            default:
+               break;
+        }
     }
 
-    if(pid == 0){
+    // Create original image
+    PPM* image = readPPM(file);
 
-        Child(filename, pipe_code, a, rails);
-        exit(0);
-        
+    // Create scaled image
+    PPM* scaledImage = ScaleFile(image, scale);
+    writePPM(targetFile,scaledImage);
+
+    // Create a negative 
+    if(negative == 1){
+        PPM* negativeImage = InvertColor(image);
+        writePPM("negative.ppm", negativeImage);
+        // Free memory
+        FreeMemory(negativeImage);
     }
-    else if(pid > 0){
-
-        wait(NULL);
-        Parent(pipe_code);
-        
-    }
-    else
-    {
-        printf("Fork failed");
-    }
-
-    fclose(mainFile);
-
+    // Free memory
+    FreeMemory(image);
+    FreeMemory(scaledImage);
 
     return 0;
 }
