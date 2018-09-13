@@ -1,3 +1,7 @@
+// César Armando Valladares
+// A01023506
+
+
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>

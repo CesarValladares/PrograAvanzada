@@ -1,5 +1,7 @@
-#include "Rails.h"
+// César Armando Valladares
+// A01023506
 
+#include "Rails.h"
 
 // Code function
 char * Code(char * original, int rails)
