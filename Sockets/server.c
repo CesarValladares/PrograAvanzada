@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <time.h>
+#include <poll.h>
 
 // Include libraries for sockets
 #include <netdb.h>
@@ -68,6 +69,8 @@ void waitForConnections(int server_fd)
     char client_presentation[INET_ADDRSTRLEN];
     int connection_fd;
     pid_t pid;
+    struct pollfd test_fd[1];
+    int timeout = 1000; // Time in milliseconds (1 second)
 
     // Loop to wait for client connections
     while (1)
@@ -76,6 +79,29 @@ void waitForConnections(int server_fd)
         // Receive incomming connections
         // Get the size of the structure where the address of the client will be stored
         client_address_size = sizeof client_address;
+
+        while(1){
+
+            // Fill the structure to prepare the poll 
+            test_fd[0].fd = server_fd;
+            test_fd[0].events = POLLIN;
+            int poll_result = poll(test_fd, 1, timeout);
+
+            if (poll_result == -1){
+
+                perror("poll"); 
+                exit(EXIT_FAILURE);
+            }
+            else if (poll_result == 0){
+                printf("No connections yet\n");
+            }
+            else {
+                printf("A connection is about to be accepted\n");
+                break;
+            }
+
+        }
+
         connection_fd = accept(server_fd, (struct sockaddr *) &client_address, &client_address_size);
         if (connection_fd == -1)
         {
