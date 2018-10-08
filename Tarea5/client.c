@@ -1,10 +1,6 @@
 /*
-    Program for a simple chat client
-    The server address and port are provided as arguments to the program
-
-    Gilberto Echeverria
-    gilecheverria@yahoo.com
-    26/02/2017
+    César Armando Valladares
+    A01023506
 */
 
 #include <stdio.h>
@@ -34,6 +30,7 @@ int main(int argc, char * argv[])
 
     int play = 1;
     
+    // Loop for play more than once 
     while(play == 1){
 
         printf("Play?\n");
@@ -44,7 +41,7 @@ int main(int argc, char * argv[])
         if (play == 1){
             connectToServer(argv[1], argv[2]);
         }else{
-            break;
+            break;  
         }
 
     }
@@ -139,6 +136,7 @@ void communicationLoop(int connection_fd)
     // Start game
     while ( strncmp(buffer, "STOP", 4) != 0)
     {
+        // Menu
         printf("1.- Hit\n");
         printf("2.- Stand\n");
         scanf("%d", &answ);

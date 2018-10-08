@@ -1,10 +1,6 @@
 /*
-    Program for a simple chat server
-    Can only connect with one client at a time
-
-    Gilberto Echeverria
-    gilecheverria@yahoo.com
-    23/02/2017
+    César Armando Valladares
+    A01023506
 */
 
 #include <stdio.h>
@@ -80,7 +76,7 @@ void waitForConnections(int server_fd)
         // Get the size of the structure where the address of the client will be stored
         client_address_size = sizeof client_address;
 
-        /*while(1){
+        while(1){
 
             // Fill the structure to prepare the poll 
             test_fd[0].fd = server_fd;
@@ -100,7 +96,7 @@ void waitForConnections(int server_fd)
                 break;
             }
 
-        }*/
+        }
 
         connection_fd = accept(server_fd, (struct sockaddr *) &client_address, &client_address_size);
         if (connection_fd == -1)
@@ -168,9 +164,11 @@ void communicationLoop(int connection_fd)
 
     srand(time(NULL));
 
+    // Creating fist two cards
     int cardA = (rand()%10)+1;
     int cardB = (rand()%10)+1;
 
+    // Variable with the total
     int sum = cardA + cardB;
 
     printf("Sum: %d\n", sum);
@@ -183,7 +181,7 @@ void communicationLoop(int connection_fd)
 
     while (loop != 0)
     {
-
+        // Creating a new card
         int card = (rand()%10)+1;
 
         if (!receiveMessage(connection_fd, buffer, BUFFER_SIZE))
@@ -194,22 +192,24 @@ void communicationLoop(int connection_fd)
         sscanf(buffer, "%d", &play);
         printf("The client sent a %d\n", play);
 
+        sum += card;
+        printf("Sum: %d\n", sum);
         
-        
+        // Send card if the player wants to play and the total is under 21
         if (play == 1 && sum <= 21){
 
             printf("sending: %d\n", card);
-            sum += card;
-            printf("Sum: %d\n", sum);
             sprintf(buffer, "%d", card);
 
         }
+        // Send "STOP" if the player wants to stop playing
         else if (play == 2){
 
             printf("sending STOP\n");
             sprintf(buffer, "STOP");
             break;
         }
+        // Send "STOP" if the player's total is over 21
         else {
 
             printf("sending STOP");
@@ -227,33 +227,26 @@ void communicationLoop(int connection_fd)
     
     int dealernum = Dealer(house);
 
+    // Send final result
     if (sum > 21){
         
         sprintf(buffer, "You lose with: %d", sum);
-        printf(buffer, "You lose with: %d\n", sum);
 
     }
     else if (dealernum > 21){
 
         sprintf(buffer, "You win with: %d", sum);
-        printf(buffer, "You win with: %d\n", sum);
     }
     else if (sum > dealernum){
 
         sprintf(buffer, "You win with: %d", sum);
-        printf(buffer, "You win with: %d\n", sum);
     }
     else {
 
         sprintf(buffer, "You lose, your hand: %d dealer's hand: %d", sum, dealernum);
-        printf(buffer, "You lose, your hand: %d dealer's hand: %d\n", sum, dealernum);
     }
 
     sendMessage(connection_fd, buffer, strlen(buffer));
 
-    // Goodbye
-    /*receiveMessage(connection_fd, buffer, BUFFER_SIZE);
-    sprintf(buffer, "BYE");
-    sendMessage(connection_fd, buffer, strlen(buffer));*/
 }
 

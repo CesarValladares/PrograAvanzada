@@ -1,0 +1,8 @@
+César Armando Valladares 
+A01023506
+
+To play firs type in the console "make" to compile all the files. 
+execute the "server" and the "client" in different consoles. 
+When the client is conected to te server will see a menu to play, type "1" to play, "2" for exit. 
+when playing the server will send you your firsts two cards, you decide to "hit" (1) or "stand" (2).
+when the game finishes, if you win or lose, the main menu will be shown again, to play or exit.
