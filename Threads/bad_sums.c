@@ -2,7 +2,7 @@
     Initial program using threads
 
     Cesar Valladares
-    11/10/18
+    15/10/18
 */
 
 #include <stdio.h>
@@ -10,6 +10,13 @@
 #include <pthread.h>
 
 #define DEFAULT_THREADS 2
+
+#define COUNTER 1000000
+
+long total = 0;
+
+// Mutex variable 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Thread entry function
 void * threadEntry (void * arg);
@@ -46,11 +53,11 @@ int main(int argc, char * argv[])
     // Wait for the threads to finish
     for (int i=0; i<num_threads; i++)
     {
-        long * return_pointer = NULL;
-        pthread_join(tid[i], (void **)&return_pointer);
-        printf("Thread %d returned with value %ld\n", i, *return_pointer);
-        free (return_pointer);
+        pthread_join(tid[i], NULL);
+        printf("Thread %d finished\n", i);
     }
+    
+    printf("The final total is %ld / %d\n", total, COUNTER * num_threads);
     
     //pthread_exit(NULL);
     return 0;
@@ -58,12 +65,14 @@ int main(int argc, char * argv[])
 
 void * threadEntry (void * arg)
 {
-    long index = (long)arg;
-    printf("This is a thread %ld, with tid %d\n", index, (int)pthread_self());
+    long index = (long) arg;
+    printf("Thread %ld started\n", index);
+    for (int i=0; i<COUNTER; i++)
+    {
+        pthread_mutex_lock(&mutex);
+        total++;
+        pthread_mutex_unlock(&mutex);
+    }
     
-    // Generate a new space in heap to store the result
-    long * result = malloc(sizeof (long));
-    *result = index * 2;
-    
-    pthread_exit((void *)result);
+    pthread_exit(NULL);
 }

@@ -4,8 +4,11 @@ A01022351
     Client program to get the value of PI
     This program connects to the server using sockets
 
-    Gilberto Echeverria
+    Based on Gilberto Echeverria
     gilecheverria@yahoo.com
+
+    César Armando Valladares
+    A01023506
     21/02/2018
 */
 
@@ -155,7 +158,8 @@ void requestPI(int connection_fd)
 
         
         if (poll_result == 0)
-        {
+        {  
+
         }
         
         else if (poll_result > 0)

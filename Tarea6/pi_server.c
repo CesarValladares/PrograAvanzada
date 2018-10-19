@@ -7,8 +7,11 @@ A01022351
     It will create child processes to attend requests
     It receives connections using sockets
 
-    Gilberto Echeverria
+    Based on Gilberto Echeverria
     gilecheverria@yahoo.com
+
+    César Armando Valladares
+    A01023506
     21/02/2018
 */
 
@@ -39,7 +42,7 @@ int initServer(char * port);
 void waitForConnections(int server_fd);
 void attendRequest(int client_fd);
 void setupHandlers();
-void detectInterruption(int signal);
+void catchInterrupt(int signal);
 
 ///// MAIN FUNCTION
 int main(int argc, char * argv[])
@@ -257,7 +260,6 @@ void attendRequest(int client_fd)
     int chars_read;
     unsigned long int iterations;
 
-
     // Clear the buffer
     bzero(buffer, BUFFER_SIZE);
 
@@ -272,43 +274,56 @@ void attendRequest(int client_fd)
 
     printf(" > Got request from client with iterations=%lu\n", iterations);
 
+    //varaibles dor poll the standard input
     struct pollfd test_fd;
+    int timeout = 1000;
     int poll_result;
-    int timeout = 10;
-    int current_it = 0;
-    double pi_result = 4;
+
+    // Variables to calculate PI
+    double result = 4;
     int sign = -1;
     unsigned long int divisor = 3;
+    unsigned long int counter;
 
-    //test_fd.fd = 0;     // Polling stdin
-    //test_fd.events = POLLIN;
     // Compute the value of PI
     test_fd.fd = client_fd;
     test_fd.events = POLLIN;
-    while (1)
+
+    int wating = 1;
+
+
+    while (wating)
     {
 
         poll_result = poll(&test_fd, 1, timeout);
         // Timeout finished without incidents
         if (poll_result == 0)
         {
-          // If nothing has happened calculate up to max_it_per_turn iterations of PI
-          for(int i = 0; i < iterations; i++){
-              if(current_it > iterations){
-                  // If the target # of iterations has been met send result
-                  break;
-              }
-              pi_result += sign * (4.0/divisor);
-              sign *= -1;
-              divisor += 2;
-              current_it++;
-          }
+            // If nothing has happened calculate up to max_it_per_turn iterations of PI
+            for(counter = 0; counter < iterations; counter++){
+
+                if (counter == iterations-1){ // When find the solution break the while and send answer
+                    wating = 0;
+                }
+                else{ // Calculate PI
+            
+                    result += sign * (4.0/divisor);
+                    sign *= -1;
+                    divisor += 2;
+                }
+            }
+        
         }
-        // When the input is ready to be read, do the scanf and add the total
+        // When when interrup send answer 
         else if (poll_result > 0)
         {
             if (test_fd.revents & POLLIN)
             {
+                sprintf(buffer, "%.20lf\n", result);
+                if (send(client_fd, buffer, strlen(buffer) + 1, 0) == -1)
+                {
+                    printf("Could not send reply");
+                }
                 break;
             }
         }
@@ -322,30 +337,28 @@ void attendRequest(int client_fd)
             }
         }
     }
-    sprintf(buffer, "%.20lf\n", pi_result);
+    
+    // Send result when finished
+    sprintf(buffer, "%.20lf\n", result);
     if (send(client_fd, buffer, strlen(buffer) + 1, 0) == -1)
     {
         printf("Could not send reply");
     }
 }
+
+// Handler
 void setupHandlers()
 {
-    struct sigaction new_action;
+  struct sigaction new_action;
+  new_action.sa_handler = catchInterrupt;
 
-    // Configure the action to take
-    // Block all signals during the time the handler funciton is running
-    sigfillset(&new_action.sa_mask);
-    new_action.sa_handler = detectInterruption;
+  sigfillset(&new_action.sa_mask);
 
-    // Set the handler
-    sigaction(SIGINT, &new_action, NULL);
+  sigaction(SIGINT,&new_action, NULL);
 }
 
-// Signal handler
-void detectInterruption(int signal)
+void catchInterrupt(int signal)
 {
-    // Change the global variable
-    printf("\nShutting down\n");
-    interrupted = 1;
-    
+  interrupted = 1;
 }
+
