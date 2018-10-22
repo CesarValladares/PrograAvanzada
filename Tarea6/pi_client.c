@@ -1,6 +1,5 @@
 /*
-Enrique Lira Martinez
-A01022351
+
     Client program to get the value of PI
     This program connects to the server using sockets
 
