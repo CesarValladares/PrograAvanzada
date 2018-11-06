@@ -3,7 +3,7 @@
 typedef struct M{
     int rows; 
     int columns; 
-    float ** m;
+    int ** m;
 } Matrix;
 
 //function to print any matrix

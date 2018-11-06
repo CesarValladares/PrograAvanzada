@@ -22,14 +22,12 @@ void allocateMemory(ppm_t * image)
 void Filter(const ppm_t * input, ppm_t * output, Matrix * filter){
 
     int ref = floor(filter->columns/2);
-    int cols = input->width;
-    int rows = input->height;
-
-    printf("ref: %d, cols: %d, rows: %d\n", ref, cols, rows);
+    int cols = input->height;
+    int rows = input->width;
 
     allocateMemory(output);
 
-    int i, ii, j, jj;
+    long i, ii, j, jj;
 
     for (i = 0; i < cols; i ++){
         for (j = 0; j < rows ; j++){
@@ -50,7 +48,7 @@ void Filter(const ppm_t * input, ppm_t * output, Matrix * filter){
                         int y = jj + ref;
                         contador += filter->m[x][y];
 
-                        printf("xsi: %d, y: %d, m: %f\n", x,y,filter->m[x][y]);
+                        //printf("xsi: %d, y: %d, m: %f\n", x,y,filter->m[x][y]);
 
                         blue += (input->pixels[i+ii][j+jj].data[0] * filter->m[x][y]);
                         green += (input->pixels[i+ii][j+jj].data[1] * filter->m[x][y]);
@@ -58,9 +56,8 @@ void Filter(const ppm_t * input, ppm_t * output, Matrix * filter){
                     }
                     else {
                         
-                        int x = ii + ref;
-                        int y = jj + ref;
-                        printf("xno: %d, y: %d, m: %f\n", x,y,filter->m[x][y]);
+                       
+                        //printf("xno: %d, y: %d, m: %f\n", x,y,filter->m[x][y]);
                     }
 
                 }
@@ -68,12 +65,19 @@ void Filter(const ppm_t * input, ppm_t * output, Matrix * filter){
 
             if (contador == 0){
                 
-                contador = 1;
+                output->pixels[i][j].data[0] = (blue);
+                output->pixels[i][j].data[1] = (green);
+                output->pixels[i][j].data[2] = (red );
+                
+            }else {
+                //printf("Contador: %d\n", contador);
+                output->pixels[i][j].data[0] = (blue/contador);
+                output->pixels[i][j].data[1] = (green/contador);
+                output->pixels[i][j].data[2] = (red/contador);
+
             }
 
-            output->pixels[i][j].data[0] = (blue/contador);
-            output->pixels[i][j].data[1] = (green/contador);
-            output->pixels[i][j].data[2] = (red/contador);
+            
 
         }
     }

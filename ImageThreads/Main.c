@@ -21,8 +21,8 @@ void applyFilter(char * argv[]){
 
     strncpy (output_image.magic_number, input_image.magic_number, 3);
     output_image.max_value = input_image.max_value;
-    output_image.height = input_image.width;
-    output_image.width = input_image.height;
+    output_image.height = input_image.height;
+    output_image.width = input_image.width;
 
     Filter(&input_image, &output_image, filter);
 

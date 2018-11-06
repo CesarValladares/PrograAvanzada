@@ -9,7 +9,7 @@
 void PrintMatrix(Matrix * matrix){
     for(int i = 0; i < matrix->rows; i++){
         for(int j = 0; j < matrix->columns; j++){
-            printf("%.5f ", (matrix->m)[i][j]);
+            printf("%d ", (matrix->m)[i][j]);
         }
         printf("\n");
     } printf("\n");
@@ -26,7 +26,7 @@ Matrix * readFile(char * fileN){
     FILE* file; 
 
     //executes only if file exist
-    if(file = fopen(fileN, "r")){
+    if((file = fopen(fileN, "r"))){
 
         //gets data
         fgets(data, sizeof data, file);
@@ -39,9 +39,9 @@ Matrix * readFile(char * fileN){
         matrix->columns = strtol(num, &num, 10);
 
         // Allocate memory
-        matrix->m = (float**)malloc((matrix->rows) * sizeof(float*));
+        matrix->m = (int**)malloc((matrix->rows) * sizeof(int*));
         for(int i = 0; i < matrix->rows; i++){
-            matrix->m[i] = (float*)malloc((matrix->columns) * sizeof(float));
+            matrix->m[i] = (int*)malloc((matrix->columns) * sizeof(int));
         }
 
         //Fill Matriz
