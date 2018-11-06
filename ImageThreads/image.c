@@ -50,24 +50,30 @@ void Filter(const ppm_t * input, ppm_t * output, Matrix * filter){
                         int y = jj + ref;
                         contador += filter->m[x][y];
 
+                        printf("xsi: %d, y: %d, m: %f\n", x,y,filter->m[x][y]);
+
                         blue += (input->pixels[i+ii][j+jj].data[0] * filter->m[x][y]);
                         green += (input->pixels[i+ii][j+jj].data[1] * filter->m[x][y]);
                         red += (input->pixels[i+ii][j+jj].data[2] * filter->m[x][y]);
                     }
                     else {
                         
-                            
+                        int x = ii + ref;
+                        int y = jj + ref;
+                        printf("xno: %d, y: %d, m: %f\n", x,y,filter->m[x][y]);
                     }
 
                 }
             } 
 
-            if (contador != 0){
-
-                output->pixels[i][j].data[0] = (blue/contador);
-                output->pixels[i][j].data[1] = (green/contador);
-                output->pixels[i][j].data[2] = (red/contador); 
+            if (contador == 0){
+                
+                contador = 1;
             }
+
+            output->pixels[i][j].data[0] = (blue/contador);
+            output->pixels[i][j].data[1] = (green/contador);
+            output->pixels[i][j].data[2] = (red/contador);
 
         }
     }
